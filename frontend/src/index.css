@@ -1,0 +1,20 @@
+/* frontend/src/index.css */
+
+/* 1. Imports Tailwind's "utility" classes (p-4, flex, etc.) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 2. This is the 🎯 FIX */
+/* We are telling the html, body, AND the #root div
+   to have our dark background, our light text color,
+   and to always be at least the full height of the screen.
+   This fixes the "white background" bug.
+*/
+@layer base {
+  html,
+  body,
+  #root {
+    @apply bg-slate-900 text-slate-200 min-h-screen;
+  }
+}

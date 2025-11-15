@@ -1,0 +1,13 @@
+# Ignore node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+
+# Build outputs
+dist/
+build/
+
+# System files
+.DS_Store
