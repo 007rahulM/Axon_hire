@@ -5,8 +5,11 @@ import axios from "axios";
 
 // 2. Create an axios instance so we can preconfigure it
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api", // Your backend base url
-  headers: {
+ // baseURL: "http://localhost:5000/api", // Your backend base url
+ //new render base url
+ baseURL: "https://axon-hire.onrender.com/api",
+ 
+ headers: {
     "Content-Type": "application/json", // Tell backend we are sending json
   },
 });
