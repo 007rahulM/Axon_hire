@@ -20,9 +20,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Password must be at least 6 characters." });
     }
 
-    if(password===confirm){
-      return res.status(400).json({ message: "Passwords do not match." });
-    }
+    
     //check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -33,7 +31,7 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     //create a new user
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword,confirm });
     
     //  This is the line that saves to the database
     await newUser.save(); 
