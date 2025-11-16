@@ -32,8 +32,8 @@ app.use(cors());
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
+     // "http://localhost:5173",
+      //"http://localhost:5174",
       "https://axon-hire.vercel.app",      // your frontend deployed domain
     ],
     methods: "GET,POST,PUT,DELETE",
@@ -51,7 +51,7 @@ app.use("/api/auth", authRoutes);
 // Any URL starting with "/api/jobs" should be handled by 'jobRoutes.js'
 app.use("/api/jobs", jobRoutes);
 
-// 🎯 THE FIX IS HERE:
+// THE FIX IS HERE:
 // Any URL starting with "/api/ai" should be handled by 'aiRoutes.js'
 // Your old code ("api/ai") was missing the '/' and broke the path.
 app.use("/api/ai", aiRoutes);
@@ -72,11 +72,11 @@ mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-  .then(() => console.log("✅ connected to mongoDB successfuly")) // This runs if the connection is a SUCCESS
-  .catch((err) => console.log("❌ MongoDb connetion error:", err.message)); // This runs if the connection FAILS
+  .then(() => console.log(" connected to mongoDB successfuly")) // This runs if the connection is a SUCCESS
+  .catch((err) => console.log(" MongoDb connetion error:", err.message)); // This runs if the connection FAILS
 
 // --- 8. START THE SERVER ---
 // Get the port number from the .env file, or just use 5000 if it's not defined
 const PORT = process.env.PORT || 5000;
 // Tell the app to start "listening" for requests on our port
-app.listen(PORT, () => console.log(`🚀 server stared on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(` server stared on http://localhost:${PORT}`));

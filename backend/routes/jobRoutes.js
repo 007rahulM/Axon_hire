@@ -14,7 +14,7 @@ const adminMiddleware = require("../middleware/adminMiddleware");
 2)@desc   get  all jobs listings
 3)@access Public-anyone can see the jobs
 */
-router.get("/", async (req, res) => {
+router.get("/jobs", async (req, res) => {
   try {
     //5 find all documents in the "job" colletion
     const jobs = await Job.find();
@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 3)@acces Private - Admin Only
 */
 //8 notice [verifyToken, adminMiddleware] is here
-router.post("/", [verifyToken, adminMiddleware], async (req, res) => {
+router.post("/jobs", [verifyToken, adminMiddleware], async (req, res) => {
   try {
     //9 get the job details from the frontend's request body
     const { title, company, location, salary } = req.body;
