@@ -1,8 +1,9 @@
 // frontend/src/pages/Register.jsx
 
 import { useState } from "react";
-import axios from "axios";
+//import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../api/axiosInstance";
 
 // This page allows new users to register
 function Register() {
@@ -39,7 +40,7 @@ function Register() {
 
     try {
       // --- Call the Backend API ---
-      const res = await axios.post("auth/register", {
+      const res = await axiosInstance.post("/api/auth/register", {
         name,
         email,
         password,
