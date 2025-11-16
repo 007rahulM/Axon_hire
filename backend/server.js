@@ -28,18 +28,18 @@ const app = express();
 // --- 4. MIDDLEWARE SETUP ---
 // 'app.use()' means "run this on EVERY request that comes in"
 // Use CORS to allow requests from any origin (e.g., your React app)
-app.use(cors());
 app.use(
   cors({
     origin: [
-     // "http://localhost:5173",
-      //"http://localhost:5174",
-      "https://axon-hire.vercel.app",      // your frontend deployed domain
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://axon-hire.vercel.app"
     ],
-    methods: "GET,POST,PUT,DELETE",
+    methods: "GET, POST, PUT, DELETE",
     credentials: true,
   })
 );
+
 // Use Express's built-in JSON parser. This lets our server read the JSON data you send from Postman/React.
 app.use(express.json());
 
