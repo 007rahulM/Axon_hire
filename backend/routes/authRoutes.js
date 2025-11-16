@@ -32,7 +32,7 @@ router.post("/register", async (req, res) => {
     //create a new user
     const newUser = new User({ name, email, password: hashedPassword });
     
-    // 🎯 This is the line that saves to the database
+    //  This is the line that saves to the database
     await newUser.save(); 
 
     // Send a success message

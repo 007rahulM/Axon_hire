@@ -44,10 +44,11 @@ function Register() {
         name,
         email,
         password,
+        confirm,
       });
 
       // --- Handle Success ---
-      // 🎯 FIX #4: Use the correct setter 'setSuccess'
+      //  FIX #4: Use the correct setter 'setSuccess'
       setSuccess(res.data.message + ". Redirecting to login...");
       setError("");
 
@@ -58,7 +59,7 @@ function Register() {
 
     } catch (err) {
       // --- Handle Errors ---
-      // 🎯 FIX #5: Use the correct setter 'setSuccess' & typo fix
+      //  FIX #5: Use the correct setter 'setSuccess' & typo fix
       setError(err.response?.data?.message || "Registration failed.");
       setSuccess("");
     }
