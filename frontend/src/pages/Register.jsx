@@ -40,7 +40,7 @@ function Register() {
 
     try {
       // --- Call the Backend API ---
-      const res = await axiosInstance.post("/api/auth/register", {
+      const res = await axiosInstance.post("/auth/register", {
         name,
         email,
         password,
