@@ -10,16 +10,19 @@ const jwt = require("jsonwebtoken");// new import for tusing the jwt
 //register route
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password } = req.body;//extract user data from the body
+    const { name, email, password,confirm } = req.body;//extract user data from the body
 
     // --- Validation (from our lesson) ---
-    if (!name || !email || !password) {
+    if (!name || !email || !password ||!confirm) {
       return res.status(400).json({ message: "Please enter all fields." });
     }
     if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters." });
     }
 
+    if(password===confirm){
+      return res.status(400).json({ message: "Passwords do not match." });
+    }
     //check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
