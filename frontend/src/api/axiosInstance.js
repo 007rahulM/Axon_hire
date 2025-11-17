@@ -4,16 +4,28 @@
 import axios from "axios";
 
 // 2. Create an axios instance so we can preconfigure it
-const axiosInstance = axios.create({
- // baseURL: "http://localhost:5000/api", // Your backend base url
- //new render base url
- baseURL: "https://axon-hire.onrender.com/api",
+//const axiosInstance = axios.create({
+//   baseURL: "http://localhost:5000/api", // Your backend base url
+//  //new render base url
+// // baseURL: "https://axon-hire.onrender.com/api",
  
- headers: {
-    "Content-Type": "application/json", // Tell backend we are sending json
+//  headers: {
+//     "Content-Type": "application/json", // Tell backend we are sending json
+//   },
+// });
+// If we are in "production" (deployed), use the Render URL.
+// If we are in "development" (localhost), use localhost:5000.
+// This way, you never have to manually switch it again.
+const baseURL = import.meta.env.MODE === "production"
+  ? "https://axon-hire.onrender.com/api"
+  : "http://localhost:5000/api";
+
+const axiosInstance = axios.create({
+  baseURL: baseURL,
+  headers: {
+    "Content-Type": "application/json",
   },
 });
-
 // 3. REQUEST Interceptor (Runs BEFORE sending any request)
 axiosInstance.interceptors.request.use(
   (config) => {

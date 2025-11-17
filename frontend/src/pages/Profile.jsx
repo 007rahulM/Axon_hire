@@ -3,13 +3,21 @@
 import { useState, useEffect } from "react";
 // 1. Import the useAuth hook to get the logged-in user
 import { useAuth } from "../context/AuthContext";
+import axiosInstance from "../api/axiosInstance"; //import axios to send the file
 
 function Profile() {
   // 2. Get the user from our global context
-  const { user } = useAuth();
+  const { user,login } = useAuth();//get kogin and user to update the user contect after upload
   
   // 3. Create *local* state just for this page
   const [appliedJobs, setAppliedJobs] = useState([]);
+
+  //new sate for the file upload
+  const[resumeFile,setResumeFile]=useState(null);
+  const[uploadStatus, setUploadStaus]=useState("");
+const API_BASE_URL = import.meta.env.MODE === "production"
+  ? "https://axon-hire.onrender.com"
+  : "http://localhost:5000";
 
   // 4. This effect runs when the 'user' object changes (i.e., on login)
   useEffect(() => {
@@ -33,10 +41,52 @@ function Profile() {
     alert("Your applied jobs list has been cleared.");
   };
 
+  
+
+  //new function  to capture the file when user selects it
+  const handleFileChange=(e)=>{
+    //we only want the first file selected
+    setResumeFile(e.target.files[0]);
+  };
+
+  //function to send the file to the backend
+  const handleUpload=async(e)=>{
+    e.preventDefault();
+    if(!resumeFile){
+      setUploadStaus("Please select a file first");
+      return;
+        }
+
+        // create the fromData package
+       const formData = new FormData();
+        formData.append("resume", resumeFile);//resume matches the  backend upload.single(resume)
+
+        try{
+          setUploadStaus("Uploading...");
+          //semd it to our new endpoint
+          //note headers are handled automatically by axios for FormData,
+          //but explicity setting it to multipart/form-data is good pratice
+          const res=await axiosInstance.post("/users/upload-resume",formData,{headers:{"Content-Type":"multipart/form-data"},
+          });
+          setUploadStaus("Upload successfull");
+          alert("Resume uploaded successfully");
+         
+          // updates our global user state with the new resumeUrl
+          //we use the login function from context to referesh the user data
+          login(res.data.user,localStorage.getItem("token"));
+        
+        
+        }  catch(err){
+          console.error("Upload failed",err);
+          setUploadStaus("Upload failed ,please try again");
+      }
+    };
+
   // 6. Safety check: If user is somehow null, show a message
   if (!user) {
-    return <h2>Please log in to view your profile.</h2>;
+    return <h2>Please log-in to view your profile.</h2>;
   }
+
 
 //   // 7. Render the profile
 //   return (
@@ -108,49 +158,68 @@ function Profile() {
           <span className="ml-2 text-white font-medium">{user.email}</span>
         </p>
 
+        {/* Resume Manager */}
+        <div className="mt-6 pt-6 border-t border-slate-700">
+          <h3 className="text-2xl font-bold text-white mb-4">My Master Resume</h3>
+ 
+        {/*status display */}
+        {user.resumeUrl?(
+          <div className="mb-4 p-3 bg-green-900/30 border border-green-600 rounded text-green-300">You have a resume on file <br/>
+        <a 
+        href={`${API_BASE_URL}${user.resumeUrl}`} // Use the dynamic variable
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline font-blod hover:text-green-100">
+          View Current Resume
+        </a>
+        </div>):(
+          <div className="mb-4 p-3 bg-yellow-900/30 border border-yellow-600 rounded text-yellow-300">
+            No resume uploaded yet. "Easy Apply is disabled"
+          </div>
+        )}
+
+        {/*Upload Form */}
+        <form onSubmit={handleUpload}className="flex gap-4 items-center">
+          <input
+          type="file"
+          accept=".pdf" //restrict to pdfs
+          onChange={handleFileChange}
+          className="block w-full text-sm text-slate-300 
+                file:mr-4 file:py-2 file:px-4 
+                file:rounded-full file:border-0 
+                file:text-sm file:font-semibold 
+                file:bg-indigo-600 file:text-white 
+                hover:file:bg-indigo-700 cursor-pointer"/>
+          <button type="submit" className="py-2 px-6 font-bold text-white rounded-md bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all" >Upload</button>
+        </form>
+        {uploadStatus && <p className="mt-2 text-indigo-300">{uploadStatus}</p>}
+
+        </div>
+        </div>
+<br/>
         {/* Horizontal Line Divider */}
         {/* 'border-slate-700': Use our faint border color */}
         <hr className="border-slate-700" />
 
-        {/* Applied Jobs Section */}
-        {/* 'mt-6': "margin-top: 1.5rem;" (Space above this section) */}
-        <div className="mt-6">
-          <h3 className="text-2xl font-bold text-white mb-4">Your Applied Jobs</h3>
-
-          {/* 'list-disc': Use bullet points */}
-          {/* 'list-inside': Put bullet points *inside* the layout */}
-          {/* 'space-y-2': "margin-top: 0.5rem;" (Adds 8px of space between each <li> item) */}
-          <ul className="list-disc list-inside space-y-2">
-            {appliedJobs.length === 0 ? (
-              <p className="text-gray-400">You have not applied for any jobs yet.</p>
-            ) : (
-              appliedJobs.map((job, i) => (
-                // 'text-lg': Make the list items easy to read
-                <li key={i} className="text-lg">
-                  <span className="font-medium text-indigo-400">{job.title}</span>
-                  <span className="text-gray-300"> at {job.company}</span>
-                </li>
-              ))
-            )}
-          </ul>
-
-          {/* Clear Button - Only show if there are jobs to clear */}
-          {appliedJobs.length > 0 && (
-            // --- "Danger" Button Styling (REUSED from Navbar) ---
-            // 'mt-6': "margin-top: 1.5rem;" (Space it away from the list)
-            // 'inline-block': Makes it only as wide as its content
-            // 'py-2 px-4': Padding
-            // 'bg-red-600': Red color
-            <button
-              onClick={handleClear}
-              className="mt-6 inline-block py-2 px-4 bg-red-600 rounded-md font-medium text-white hover:bg-red-700 transition-colors"
-            >
-              Clear Applied Jobs
-            </button>
-          )}
-        </div>
+        {/* --- Applied Jobs List (Old Logic) --- */}
+      <div className="p-8 rounded-lg shadow-lg bg-slate-800/70 backdrop-blur-lg border border-slate-700">
+        <h3 className="text-2xl font-bold text-white mb-4">Application History (Local)</h3>
+        <ul className="list-disc list-inside space-y-2">
+          {appliedJobs.map((job, i) => (
+            <li key={i} className="text-lg">
+              <span className="font-medium text-indigo-400">{job.title}</span>
+              <span className="text-gray-300"> at {job.company}</span>
+            </li>
+          ))}
+        </ul>
+        {appliedJobs.length > 0 && (
+          <button onClick={handleClear} className="mt-6 py-2 px-4 bg-red-600 rounded-md font-medium text-white hover:bg-red-700">
+            Clear History
+          </button>
+        )}
       </div>
     </div>
+  
   );
 }
 

@@ -34,7 +34,10 @@ try{
     //5 get theunique path of the file multer just saved
     //req.file.path will be somethine lie "uploads.resume-1233.pdf"
     //we'll fix path separator for windows/links later if needed
-    const resumeUrl=req.file.path.replace(/\\/g,"/");
+    // 🎯 THE FIX: Manually construct the clean URL
+        // Instead of relying on the messy system path, we just use the filename.
+        // This creates "uploads/resume-123.pdf" perfectly every time.
+       const resumeUrl = `/uploads/${req.file.filename}`;
 
     //6 find the logged-in user in the database and update their resumeURL field
     //req.user.id comes from our verifyToken middleware

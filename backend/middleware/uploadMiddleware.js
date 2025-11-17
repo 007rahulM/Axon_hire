@@ -5,10 +5,11 @@ const path=require("path");
 //3 this is the storage engine ,it tells multer where and how to save our files
 const storage=multer.diskStorage({
     //4 destination tells multer where to put the file
-    destination:(req,file,cb)=>{
-        //we'll createa folder named uploads -it must exist or we create it 
-        //null means no errors
-        cb(null,"uploads/");
+destination: (req, file, cb) => {
+    // 🎯 FIX: Use absolute path.
+    // Go from 'backend/middleware' (this file) -> up one level -> into 'uploads'
+    // This guarantees it lands in 'backend/uploads' every time.
+    cb(null, path.join(__dirname, "../uploads"));
     },
     //5 filename tells multer what to name the file
     filename:(req,file,cb)=>{

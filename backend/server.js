@@ -13,6 +13,9 @@ const mongoose = require("mongoose");
 // Import CORS: The middleware that allows our React app (on port 5173) to talk to this server (on port 5000)
 const cors = require("cors");
 
+const path=require("path"); //import path 
+const fs=require("fs");//import file system tool
+
 // --- 2. IMPORT OUR ROUTE FILES ---
 // We import the "mini-apps" we wrote for Auth, Jobs, and AI
 const authRoutes = require("./routes/authRoutes");
@@ -22,6 +25,10 @@ const aiRoutes = require("./routes/aiRoutes");
 const verifyToken = require("./middleware/authMiddleware");
 //import the new user routes
 const userRoutes=require("./routes/userRoutes");
+
+const applicationRoutes=require("./routes/applicationRoutes");//import the application routes
+
+
 // --- 3. INITIALIZE THE APP ---
 // Create the main Express application "app"
 const app = express();
@@ -47,7 +54,15 @@ app.use(express.json());
 //this server all files from the uploads filder as static files
 //it means if we have a file at uploads/my-resume.pdf
 //we can access it in the browsesr at"http://locahost:500/uploads/mu-resume.pdf
-app.use("/uploads",express.static("uploads"));
+//print path we are trying to serve
+const uploadsPath = path.join(__dirname, "uploads");
+console.log("SERVER STARTUP: Serving files from ->", uploadsPath);
+
+
+//server folder explicitly
+app.use("/uploads",express.static(uploadsPath));
+
+
 
 app.use("/api/users",userRoutes)
 
@@ -73,6 +88,10 @@ app.get("/", (req, res) => {
 app.get("/api/protected", verifyToken, (req, res) => {
   res.json({ message: "Access granted token verified", user: req.user });
 });
+
+//api rputes//
+app.use("/api/applications",applicationRoutes); //pulg it in
+
 
 // --- 7. MONGODB CONNECTION ---
 // Connect to the MongoDB database using the secret URL from our .env file
