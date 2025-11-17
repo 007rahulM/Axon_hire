@@ -20,7 +20,8 @@ const jobRoutes = require("./routes/jobRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 // Import our "security guard" middleware to check JWTs
 const verifyToken = require("./middleware/authMiddleware");
-
+//import the new user routes
+const userRoutes=require("./routes/userRoutes");
 // --- 3. INITIALIZE THE APP ---
 // Create the main Express application "app"
 const app = express();
@@ -35,13 +36,20 @@ app.use(
       "http://localhost:5174",
       "https://axon-hire.vercel.app"
     ],
-    methods: "GET, POST, PUT, DELETE",
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
 // Use Express's built-in JSON parser. This lets our server read the JSON data you send from Postman/React.
 app.use(express.json());
+//this server all files from the uploads filder as static files
+//it means if we have a file at uploads/my-resume.pdf
+//we can access it in the browsesr at"http://locahost:500/uploads/mu-resume.pdf
+app.use("/uploads",express.static("uploads"));
+
+app.use("/api/users",userRoutes)
 
 // --- 5. API ROUTES (The "Address Book") ---
 // Tell Express how to handle different URLs

@@ -25,8 +25,16 @@ const userSchema = new mongoose.Schema({
   // new thing: add the role field
   role: {
     type: String,
-    enum: ["user", "admin"], //the only possible values
+    enum: ["user", "admin","recruiter"], //the only possible values
     default: "user", //new sinups are user by default
+  },
+
+  //resume url 
+  //this will store the path to the the user's master resume
+  //we se default null so we  know if they've uploaded one yet
+  resumeUrl:{
+    type:String,
+    default:null,
   },
 });
 
