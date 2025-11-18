@@ -45,7 +45,7 @@ return (
         {/* 'text-white': "color: white;" */}
         <h1 className="text-4xl font-bold text-white">
           {/* We check if the user is logged in to show a custom message */}
-          {isLoggedIn ? `Welcome back, ${username?.name}!` : "Welcome to the AI Job Portal"}
+          {isLoggedIn ? `Welcome back ${username?.name}` : "Welcome to the Axon Hire Job Portal"}
         </h1>
 
         {/* Page Subtitle */}
@@ -56,7 +56,7 @@ return (
           Your next career move is just one click away.
         </p>
         <p className="text-lg text-gray-400 mt-2">
-          Find jobs, practice for interviews with our AI, and get hired.
+          Find your dream jobs and practice for interviews with our Axon AI and get hired.
         </p>
 
         {/* "Call to Action" Button Container */}

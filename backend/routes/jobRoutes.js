@@ -49,7 +49,7 @@ router.post("/", [verifyToken, adminMiddleware], async (req, res) => {
       company,
       location,
       salary,
-      postedBy: req.user.id
+      postedBy: req.user.id //save the recruiter's ID from the token
     });
 
     //12 save the new job to the MongoDB database

@@ -13,6 +13,8 @@ import AdminPostJob from "./pages/AdminPostJob";//import the admin page
 //import AdminRoute from "./routes/AdminRoute";//import the admin route security
 import AIBot from "./pages/AIBot";//import the AIbot page
 
+import RegisterRecruiter  from "./pages/RegisterRecruiter"; //import the register recuiter page 
+
 
 //import our security guards 
 import ProtectedRoute from "./routes/ProtectedRoute";//import the  protected route security
@@ -108,7 +110,8 @@ function App(){
       {/*public routes */}
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
-     
+      {/*here added the new public route register recuriter route */}
+      <Route path="/register-recruiter" element={<RegisterRecruiter/>}/>     
       <Route path="/" element={<Home/>}/>
 
       {/*private routes :everyone inside protectedroute need login */}

@@ -81,7 +81,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// 15. 🎯 THE FIX:
+// 15.  THE FIX:
 // This line "exports" the axiosInstance as the "default" thing from this file.
 // This is the line that was missing and causing your crash.
 export default axiosInstance;

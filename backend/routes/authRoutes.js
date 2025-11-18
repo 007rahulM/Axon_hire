@@ -7,6 +7,7 @@ const bcrypt = require("bcryptjs"); //for password hashing
 const User = require("../models/User"); //import user model
 const jwt = require("jsonwebtoken");// new import for tusing the jwt
 
+const Company=require("../models/Company");//we need the company model for recuriter register route
 //register route
 router.post("/register", async (req, res) => {
   try {
@@ -45,6 +46,58 @@ router.post("/register", async (req, res) => {
   }
 });
 
+
+//-- 2   new recruiter register route
+router.post("/register-recruiter",async(req,res)=>{
+  try{
+    // extract the data from the request body
+    const {name,email,password,confirm,companyName,contactEmail,website,CompanyDescription}=req.body;
+    //we accept use info and company info
+    if(!name ||!email||!password||!confirm||!companyName ||!contactEmail){
+      return res.status(400).json({message:"Please enter all required fields"});
+    }
+    //check if user exists
+    const existingUser=await User.findOne({email});
+    if(existingUser) return res.status(400).json({message:"User already exists"});
+
+    // create the user role:recruiter
+    const hashedPassword=await bcrypt.hash(password,10);
+    const newUser=new User(
+      {name,email,password:hashedPassword,confirm,role:"recruiter" } //here force role to be recruiter
+    );
+    const savedUser=await newUser.save();
+
+    // create the company linled to the user
+    const newCompany=new Company({
+      owner:savedUser._id,  //link to the new recruiter
+      name:companyName,
+      contactEmail:contactEmail,
+      website:website ||"",
+      description:CompanyDescription || ""  
+    
+    });
+
+    await newCompany.save();
+    //send success response auto-login logic
+    const payload={ id:savedUser._id,email:savedUser.email,role:savedUser.role};
+    const token=jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:"12h"});
+
+    res.status(201).json({
+      message:"Recruiter registered successfully",
+      token,
+      user:{id:savedUser._id,name:savedUser.name,email:savedUser.email,role:savedUser.role},
+      Company:newCompany
+    });
+   }catch(err){
+    console.error("Recruiter registration error:",err);
+    res.status(500).json({message:"Server error during registration"});
+   }
+});
+
+
+
+
+
 // login with JWT
 router.post("/login", async (req, res) => {
   try {
@@ -52,7 +105,7 @@ router.post("/login", async (req, res) => {
 
     //check if the user exists
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "USer not found" }); // This is the 400 Bad Request you see
+    if (!user) return res.status(400).json({ message: "User not found" }); // This is the 400 Bad Request you see
     
     //comapre password with hashed one
     const isMatch = await bcrypt.compare(password, user.password);
@@ -63,7 +116,7 @@ router.post("/login", async (req, res) => {
     const payload = {
       id: user._id,
       email: user.email,
-      role: user.role, // This is the fix to include the role
+      role: user.role, //  includinng the role
     };
     const token = jwt.sign(
       payload,

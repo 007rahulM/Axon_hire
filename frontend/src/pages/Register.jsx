@@ -23,7 +23,7 @@ function Register() {
   const handleRegisters = async (e) => {
     e.preventDefault(); // Stop page reload
     setError(""); // Clear old errors
-    setSuccess(""); // 🎯 FIX #2: Use the correct setter 'setSuccess'
+    setSuccess(""); //  FIX #2: Use the correct setter 'setSuccess'
 
     // --- Frontend Validation ---
     // 🎯 FIX #3: Added '!confirm' to the validation check
@@ -71,7 +71,7 @@ function Register() {
       <div className="w-full max-w-md p-8 rounded-lg shadow-xl bg-slate-800/70 backdrop-blur-lg border border-slate-700">
         <h2 className="text-3xl font-bold text-center text-white mb-6">Create Your Account</h2>
 
-        {/* 🎯 FIX #6: The button is now INSIDE the form */}
+        {/*   The button is now INSIDE the form */}
         <form onSubmit={handleRegisters}>
           {/* Name Field Group */}
           <div className="mb-4">
@@ -136,7 +136,7 @@ function Register() {
           </div>
 
           {/* Error/Success Messages */}
-          {/* 🎯 FIX #7: Use the correct state variable 'success' */}
+          {/*  Use the correct state variable 'success' */}
           {error && <p className="text-center mt-4 text-red-400">{error}</p>}
           {success && <p className="text-center mt-4 text-green-400">{success}</p>}
         </form>

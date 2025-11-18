@@ -5,6 +5,9 @@ import{useAuth}from "../context/AuthContext";
 //3 import our custom axiosinstance that already has our backend url and token logic
 import axiosInstance from "../api/axiosInstance";
 
+//import for redirection 
+import { useNavigate }  from "react-router-dom";
+
 //----job card component---//
 //this commonent just receives props ,it doesn't care if the data
 //is hard-coded or from an api,which is why its so reusable.
@@ -63,6 +66,15 @@ function JobCard({title,company,location,salary,onApply,applied})
         <p className="text-gray-100 mt-2">{salary}</p>
       </div>
 
+
+     
+     
+      {/*new feature ===> on apply button--the smart button styling
+      if 'applied' is ture then it turns gray and uncliable
+      if 'applied' is false it shows our the first gradient color
+      its added in the abpply button 
+      */}
+
       {/* Bottom section of the card (the button) */}
       <div>
         {/* --- Gradient "Apply" Button (REUSED from Login.jsx) --- */}
@@ -73,13 +85,19 @@ function JobCard({title,company,location,salary,onApply,applied})
         <button
           onClick={onApply}
           disabled={applied}
-          className="w-full py-2 px-4 font-bold text-white rounded-md mt-6
+          /*className="w-full py-2 px-4 font-bold text-white rounded-md mt-6
                      bg-gradient-to-r from-indigo-500 to-purple-500 
                      hover:from-indigo-600 hover:to-purple-600 
                      transition-all duration-300
-                     disabled:from-gray-500 disabled:to-gray-600 disabled:opacity-70"
+                     disabled:from-gray-500 disabled:to-gray-600 disabled:opacity-70"*/
+
+          className={`w-full py-2 px-4 font-bold texxt-white rounded-md mt-6 transition-all duration-300
+            ${applied 
+              ? "bg-gray-600 cursor-not-allowed opacity-70" 
+              : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+            }`}
         >
-          {applied ? "Applied" : "Apply"}
+          {applied ? "Applied" : " Easy Apply"}
         </button>
       <br/>
       </div>
@@ -99,6 +117,7 @@ function Jobs(){
   //this state will show a "loading..." meassage while we fetch
   const[loading,setLoading]=useState(true);
 
+   const navigate=useNavigate(); //
 
   //6 this useeffect hook runs once when the component first loads
   useEffect(()=>{
@@ -128,8 +147,7 @@ function Jobs(){
     fetchData();//13 call the function we just defined
   },[user]);//14 the[user] dependency array means-rerun this if the user  object changes ex on login/logout 
 
-
-  //15 this function runse when a user click apply
+  {/*//15 this function runse when a user click apply
   const handleApply=(job)=>{
     if(!isLoggedIn || !user){
       alert("You must be logged in to apply for a job");
@@ -147,6 +165,59 @@ function Jobs(){
   localStorage.setItem(userKey,JSON.stringify(newAppliedJobs));
   alert(`Successfully applied for ${job.title}`);
 };
+
+*/}
+
+//handle apply logic old one is on above with less feature the extended version is here
+//new feature the smart apply ogic for the easy apply
+const handleApply=async (job)=>{
+  // security check
+  if(!isLoggedIn || !user){
+    alert("You must be logged in to apply for a job");
+    navigate("/login");
+    return;
+  }
+  //resume check -if the master resume is there in the profile if not we cannot apply
+  //we check if the user has a resumeUrl in their profike
+  if(!user.resumeUrl){
+    const confirmRedirect=window.confirm(
+      "To Apply you must upload a Master Resume in your Profile First \n\n Go to Profile now? "
+    );
+    if(confirmRedirect){
+      navigate("/profile");
+    }
+    return; //stop here do not apply
+  }
+
+  //Optimistic UI update logic
+  //here we assume success and turn the button green immediately
+  const previousApplied=[...appliedJobs];
+  const newAppliedList=[...previousApplied,job];
+  setAppliedJobs(newAppliedList);
+  
+  try{
+    // call the backend 
+    // this creates the actual application document in the mongodb
+    await axiosInstance.post(`/applications/${job._id}/apply`);
+    alert(`Success You have applied to ${job.title} at ${job.company}`);
+
+
+    // save to localstorage-keep the cache in the synce
+    localStorage.setItem(`appliedJobs_${user.email}`,JSON.stringify(newAppliedList));
+
+  }catch(err){
+    //error handling-rollback
+    //if the backend sys "error or duplicate",we revert the button
+    console.error("Application failed:",err);
+    setAppliedJobs(previousApplied); //undo the green button
+
+    //show the specific error message from the backend
+    alert(err.response?.data?.message || "Application failed");
+  }
+
+};
+
+
 
 // //16 render the component UI
 // return(

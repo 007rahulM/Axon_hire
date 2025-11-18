@@ -34,7 +34,7 @@ try{
     //5 get theunique path of the file multer just saved
     //req.file.path will be somethine lie "uploads.resume-1233.pdf"
     //we'll fix path separator for windows/links later if needed
-    // 🎯 THE FIX: Manually construct the clean URL
+    //  THE FIX: Manually construct the clean URL
         // Instead of relying on the messy system path, we just use the filename.
         // This creates "uploads/resume-123.pdf" perfectly every time.
        const resumeUrl = `/uploads/${req.file.filename}`;

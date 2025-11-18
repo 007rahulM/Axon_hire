@@ -7,7 +7,7 @@ const User=require("../models/User");
 
 /*
 @route post/api/applications/:jobID/apply
-apply for a job using tje user's saved Master Resume(easy apply)
+apply for a job using the user's saved Master Resume(easy apply)
 private -user must be logged in
 
  */

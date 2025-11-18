@@ -161,7 +161,7 @@ return (
       <div className="max-w-7xl mx-auto p-4 flex justify-between items-center">
         
         {/* 1. The Title/Logo (no change) */}
-        <h3 className="text-2xl font-bold text-white">AI Job Portal</h3>
+        <h3 className="text-2xl font-bold text-white">Axon Hire</h3>
 
         {/* 2. 🎯 THE HAMBURGER BUTTON (Mobile Only) */}
         {/* 'md:hidden': This is the magic.
@@ -190,7 +190,7 @@ return (
           </button>
         </div>
 
-        {/* 3. 🎯 THE DESKTOP MENU (Desktop Only) */}
+        {/* 3.  THE DESKTOP MENU (Desktop Only) */}
         {/* 'hidden': This is 'display: none;' by default (on mobile).
             'md:flex': This is 'display: flex;' *only* on medium screens and up.
             This is the *opposite* of the hamburger button.
@@ -201,34 +201,39 @@ return (
             <>
               <button
                 onClick={() => navigate("/login")}
-                className="py-2 px-4 font-medium text-white rounded-md bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all duration-300"
-              >
+                className="py-2 px-4 font-medium text-white rounded-md bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all duration-300" >
                 Login
               </button>
+              
               <button
                 onClick={() => navigate("/register")}
-                className="py-2 px-4 font-medium text-white rounded-md bg-slate-700 hover:bg-slate-600 transition-colors"
-              >
+                 className="py-2 px-4 font-medium text-white rounded-md bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all duration-300" >
                 Register
+              </button>
+              {/* Recruiter Register (Tertiary - Outline Style)  to desktop view */}
+              <button onClick={() => navigate("/register-recruiter")}
+               className="py-2 px-4 font-medium text-white rounded-md bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all duration-300"
+               >
+                Register (Recruiter)
               </button>
             </>
           ) : (
             <>
-              <span className="text-gray-300">Welcome, {user?.name || "User"}!</span>
+              <span className="text-gray-300">Welcome  {user?.name || "User"}</span>
               <button onClick={() => navigate("/")} className="font-medium hover:text-indigo-400">Home</button>
               <button onClick={() => navigate("/jobs")} className="font-medium hover:text-indigo-400">Jobs</button>
               <button onClick={() => navigate("/profile")} className="font-medium hover:text-indigo-400">Profile</button>
               <button onClick={() => navigate("/ai-bot")} className="font-medium text-green-400 hover:text-green-300">
                 AI Bot
               </button>
-              {user?.role === "admin" && (
+              {user?.role == "admin" || user?.role == "recruiter" ? (
                 <button
                   onClick={() => navigate("/admin/post-job")}
                   className="py-2 px-4 bg-indigo-600 rounded-md font-bold text-white hover:bg-indigo-700"
                 >
                   Post Job
                 </button>
-              )}
+              ):null}
               <button
                 onClick={handleLogout}
                 className="py-2 px-4 bg-red-600 rounded-md font-medium text-white hover:bg-red-700"
@@ -240,11 +245,11 @@ return (
         </div>
       </div>
 
-      {/* 4. 🎯 THE MOBILE MENU (Dropdown) */}
+      {/* 4.  THE MOBILE MENU (Dropdown) */}
       {/* This 'div' is only shown if 'isOpen' is true. */}
       {/* 'md:hidden': This *entire menu* is hidden on desktops. */}
       {isOpen && (
-        <div className="md:hidden p-4 space-y-2 bg-slate-800">
+        <div className="md:hidden p-4 space-y-4 bg-slate-800">
           {/* We repeat the links here, but stack them vertically */}
           {!isLoggedIn ? (
             <>
@@ -256,9 +261,14 @@ return (
               </button>
               <button
                 onClick={() => navigate("/register")}
-                className="w-full py-2 px-4 font-medium text-white rounded-md bg-slate-700"
-              >
+                 className="w-full py-2 px-4 font-medium text-white rounded-md bg-gradient-to-r from-indigo-500 to-purple-500"
+                 >
                 Register
+              </button>
+
+              {/*adding the new register recruiter page */}
+            <button onClick={() => navigate("/register-recruiter")}  className="w-full py-2 px-4 font-medium text-white rounded-md bg-gradient-to-r from-indigo-500 to-purple-500">
+                Register (Recruiter)
               </button>
             </>
           ) : (
@@ -269,14 +279,14 @@ return (
               <button onClick={() => navigate("/ai-bot")} className="block w-full text-left p-2 text-green-400 hover:bg-slate-700 rounded">
                 AI Bot
               </button>
-              {user?.role === "admin" && (
+             {user?.role === "admin" || user?.role === "recruiter" ?(
                 <button
                   onClick={() => navigate("/admin/post-job")}
                   className="block w-full text-left p-2 text-blue-400 hover:bg-slate-700 rounded"
                 >
-                  Post Job (Admin)
+                  Post Job 
                 </button>
-              )}
+             ):null}
               <button
                 onClick={handleLogout}
                 className="w-full py-2 px-4 bg-red-600 rounded-md font-medium text-white"
