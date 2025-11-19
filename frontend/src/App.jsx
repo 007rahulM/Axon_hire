@@ -19,6 +19,7 @@ import RegisterRecruiter  from "./pages/RegisterRecruiter"; //import the registe
 //import our security guards 
 import ProtectedRoute from "./routes/ProtectedRoute";//import the  protected route security
 import AdminRoute from "./routes/AdminRoute";//import the admin route security
+import RecruiterDashboard from "./pages/RecruiterDashboard";
 
 /*
 // function App() {
@@ -128,6 +129,7 @@ function App(){
     {/*Admin routes -only admins can see these */}
   <Route element={<AdminRoute />}>
           <Route path="/post-job" element={<AdminPostJob />} />
+          <Route path="/recruiter-dashboard" element={<RecruiterDashboard/>}/>
         </Route>
 
  </Routes>

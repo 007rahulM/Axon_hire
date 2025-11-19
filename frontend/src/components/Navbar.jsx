@@ -226,6 +226,15 @@ return (
               <button onClick={() => navigate("/ai-bot")} className="font-medium text-green-400 hover:text-green-300">
                 AI Bot
               </button>
+              {user?.role === "admin" || user?.role === "recruiter" ?(
+          <button
+onClick={() => navigate("/recruiter-dashboard")}
+className="font-medium hover:text-indigo-400"
+>
+Dashboard
+</button>
+           
+        ):null}
               {user.role == "admin" || user.role == "recruiter" ? (
                 <button
                   onClick={() => navigate("/post-job")}
@@ -279,6 +288,14 @@ return (
               <button onClick={() => navigate("/ai-bot")} className="block w-full text-left p-2 text-green-400 hover:bg-slate-700 rounded">
                 AI Bot
               </button>
+              {user?.role === "admin" || user?.role === "recruiter" ?(
+              <button
+ onClick={() => navigate("/recruiter-dashboard")}
+ className="block w-full text-left p-2 text-blue-400 hover:bg-slate-700 rounded">
+ Dashboard
+</button>
+               
+            ):null}
              {user?.role === "admin" || user?.role === "recruiter" ?(
                 <button
                   onClick={() => navigate("/post-job")}
@@ -286,7 +303,9 @@ return (
                 >
                   Post Job 
                 </button>
+                
              ):null}
+
               <button
                 onClick={handleLogout}
                 className="w-full py-2 px-4 bg-red-600 rounded-md font-medium text-white"

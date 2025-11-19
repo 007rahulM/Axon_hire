@@ -22,6 +22,15 @@ applicantId:{
     ref:"User",
     required:true,
 },
+
+
+
+// link to their Resume(we will store the url/path herr)
+resumeUrl:{
+    type:String, //eg. "/uploads/resume-rahul.paf"
+    required:false, //optional for now until we build the upload button
+
+},
 // this is your  application status fields come from
 //enum restricts this field to only these 4 values
 //default-submitted means every new application automaticall starts as Submited
@@ -30,6 +39,11 @@ status:{
     enum:["Submitted","Viewed","Shortlisted","Rejected"],
     default:"Submitted",
 
+},
+
+appliedAt:{
+    type:Date,
+    default:Date.now,
 },
 },
 //timestamps:true -it automatically adds created at and updatedat fields

@@ -29,6 +29,7 @@ const userRoutes=require("./routes/userRoutes");
 const applicationRoutes=require("./routes/applicationRoutes");//import the application routes
 
 
+
 // --- 3. INITIALIZE THE APP ---
 // Create the main Express application "app"
 const app = express();
@@ -89,8 +90,11 @@ app.get("/api/protected", verifyToken, (req, res) => {
   res.json({ message: "Access granted token verified", user: req.user });
 });
 
-//api rputes//
+//api to use application routes//
 app.use("/api/applications",applicationRoutes); //pulg it in
+
+
+
 
 
 // --- 7. MONGODB CONNECTION ---
