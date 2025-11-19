@@ -56,7 +56,8 @@ function RegisterRecruiter(){
     setSuccess("Registering recruiter and company...");
 
     // call the specialized backend route
-    const res=await axiosInstance.post("http://localhost:5000/api/auth/register-recruiter", submissionData);
+    const res=await axiosInstance.post("/auth/register-recruiter", submissionData);
+
 
     // on success ,auto-login the recruiter
     login(res.data.user,res.data.token);

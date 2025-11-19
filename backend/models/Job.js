@@ -35,4 +35,4 @@ const jobSchema = new mongoose.Schema({
 }, { timestamps: true }); // Automatically adds createdAt and updatedAt
 
 //export this router so server.js can use it
-module.exports = mongoose.model("Job", jobSchema,Schema);
+module.exports = mongoose.model("Job", jobSchema);

@@ -1,14 +1,25 @@
 import { useState } from "react";
 import axiosInstance from "../api/axiosInstance";//use our secure axios
 import { useNavigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "../context/AuthContext";
 
 
-function AdminPostJob(){
+function PostJob(){
     const [title,setTitle]=useState("");
     const[company,setCompany]=useState("");
     const[location,setLocation]=useState("");
     const[salary,setSalary]=useState("");
     const navigate=useNavigate();
+
+    const{user}=useAuth();//get logged-in-user
+    if(user.role !=="admin"  && user.role!=="recruiter"){
+      return(
+        <h2 className="text-center text-white mt-20">
+          Access Denied-only Amdmine and Recruiter can post jobs
+        </h2>
+      )
+    }
+    
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
@@ -97,7 +108,7 @@ function AdminPostJob(){
         
         {/* Title: 'text-3xl', 'font-bold', 'text-center', 'mb-6' */}
         <h2 className="text-3xl font-bold text-center text-white mb-6">
-          Admin: Post New Job
+           Post New Job
         </h2>
         
         {/* Form */}
@@ -176,4 +187,4 @@ function AdminPostJob(){
   );
 }
 
-export default AdminPostJob;
+export default PostJob;

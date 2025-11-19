@@ -24,6 +24,8 @@ export const AuthProvider = ({ children }) => {
       try {
         // 🎯 THE FIX: You must PARSE the user string back into an object
         setUser(JSON.parse(storedUser));
+        const parsedUser=JSON.parse(storedUser);
+        console.log("AuthContext Restoring user from storage:",parsedUser.role)
         setToken(storedToken);
         setIsLoggedIn(true);
       } catch (e) {

@@ -226,9 +226,9 @@ return (
               <button onClick={() => navigate("/ai-bot")} className="font-medium text-green-400 hover:text-green-300">
                 AI Bot
               </button>
-              {user?.role == "admin" || user?.role == "recruiter" ? (
+              {user.role == "admin" || user.role == "recruiter" ? (
                 <button
-                  onClick={() => navigate("/admin/post-job")}
+                  onClick={() => navigate("/post-job")}
                   className="py-2 px-4 bg-indigo-600 rounded-md font-bold text-white hover:bg-indigo-700"
                 >
                   Post Job
@@ -281,7 +281,7 @@ return (
               </button>
              {user?.role === "admin" || user?.role === "recruiter" ?(
                 <button
-                  onClick={() => navigate("/admin/post-job")}
+                  onClick={() => navigate("/post-job")}
                   className="block w-full text-left p-2 text-blue-400 hover:bg-slate-700 rounded"
                 >
                   Post Job 

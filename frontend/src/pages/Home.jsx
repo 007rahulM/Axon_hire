@@ -83,7 +83,7 @@ return (
             to="/ai-bot"
             className="py-3 px-6 font-bold text-white rounded-md bg-slate-700 hover:bg-slate-600 transition-colors"
           >
-            Practice with AI Bot
+            Practice with Axon
           </Link>
         </div>
       </div>

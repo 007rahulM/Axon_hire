@@ -10,7 +10,7 @@ const AdminRoute=()=>{
     if(loading)return<div>Loading...</div>;
 
     //2 if user is logged in and is an admiin let them in
-    if(user && user.role==="admin"){
+    if(user && (user.role==="admin" || user.role=="recruiter")){
         return<Outlet/>;
 }
 

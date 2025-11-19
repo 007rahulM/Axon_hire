@@ -9,7 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile"; //new page
 //import ProtectedRoute from "./routes/ProtectedRoute";//import the  protected route security
-import AdminPostJob from "./pages/AdminPostJob";//import the admin page
+import AdminPostJob from "./pages/PostJob";//import the admin page
 //import AdminRoute from "./routes/AdminRoute";//import the admin route security
 import AIBot from "./pages/AIBot";//import the AIbot page
 
@@ -19,7 +19,6 @@ import RegisterRecruiter  from "./pages/RegisterRecruiter"; //import the registe
 //import our security guards 
 import ProtectedRoute from "./routes/ProtectedRoute";//import the  protected route security
 import AdminRoute from "./routes/AdminRoute";//import the admin route security
-
 
 /*
 // function App() {
@@ -128,7 +127,7 @@ function App(){
 
     {/*Admin routes -only admins can see these */}
   <Route element={<AdminRoute />}>
-          <Route path="/admin/post-job" element={<AdminPostJob />} />
+          <Route path="/post-job" element={<AdminPostJob />} />
         </Route>
 
  </Routes>

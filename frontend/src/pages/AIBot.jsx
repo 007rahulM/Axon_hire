@@ -122,7 +122,7 @@ function AIBot(){
         {/* 'text-3xl': "font-size: 1.875rem;" */}
         {/* 'font-bold': "font-weight: 700;" */}
         {/* 'text-white': "color: white;" */}
-        <h2 className="text-3xl font-bold text-white">AI Interview Bot</h2>
+        <h2 className="text-3xl font-bold text-white">Axon Interview Bot</h2>
         {/* 'mt-2': "margin-top: 0.5rem;" */}
         {/* 'text-lg': "font-size: 1.125rem;" */}
         {/* 'text-gray-300': Soft, light gray text */}

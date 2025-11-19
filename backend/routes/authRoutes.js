@@ -51,7 +51,7 @@ router.post("/register", async (req, res) => {
 router.post("/register-recruiter",async(req,res)=>{
   try{
     // extract the data from the request body
-    const {name,email,password,confirm,companyName,contactEmail,website,CompanyDescription}=req.body;
+    const {name,email,password,confirm,companyName,contactEmail,website,companyDescription}=req.body;
     //we accept use info and company info
     if(!name ||!email||!password||!confirm||!companyName ||!contactEmail){
       return res.status(400).json({message:"Please enter all required fields"});
@@ -73,7 +73,7 @@ router.post("/register-recruiter",async(req,res)=>{
       name:companyName,
       contactEmail:contactEmail,
       website:website ||"",
-      description:CompanyDescription || ""  
+      description:companyDescription || ""  
     
     });
 
