@@ -11,3 +11,6 @@ build/
 
 # System files
 .DS_Store
+
+#uploads file not be in the git
+uploads/

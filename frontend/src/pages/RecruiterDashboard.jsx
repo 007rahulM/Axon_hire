@@ -29,7 +29,7 @@ const API_BASE_URL = import.meta.env.MODE === "production"
             }
         };
         fetchApplications();
-    },[applications]);
+    },[]);
 
 //   //2 helper function to change status -we will hook this up to the backend later
 //   const handleStatusChange=(appId,newStaus)=>{
