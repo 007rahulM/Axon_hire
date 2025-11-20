@@ -5,6 +5,8 @@ const verifyToken=require("../middleware/authMiddleware");//our logged-in securi
 const upload=require("../middleware/uploadMiddleware");//our new file catcher midddleware
 const User=require("../models/User");//the user blueprint
 
+
+
 /*
 @route POST/api/users/upload-resume
 -to upload or update a user's master resume
@@ -37,19 +39,26 @@ try{
     //  THE FIX: Manually construct the clean URL
         // Instead of relying on the messy system path, we just use the filename.
         // This creates "uploads/resume-123.pdf" perfectly every time.
-       const resumeUrl = `/uploads/${req.file.filename}`;
+       
+        //const resumeUrl = `/uploads/${req.file.filename}`;
+   const cloudUrl=req.file.path;
+   console.log(" File uploaded to Cloudinary:", cloudUrl);
 
     //6 find the logged-in user in the database and update their resumeURL field
     //req.user.id comes from our verifyToken middleware
     //{new:true} tells mongoose to send us back the updated use
     
-    const updatedUser=await User.findByIdAndUpdate(req.user.id,{resumeUrl:resumeUrl},{new:true}).select("-password");//.secelct("-password") removes the password hash
+    //const updatedUser=await User.findByIdAndUpdate(req.user.id,{resumeUrl:resumeUrl},{new:true}).select("-password");//.secelct("-password") removes the password hash
 
+    const user=await User.findById(req.user.id);
+    user.resumeUrl=cloudUrl;//save the secure link
+    await user.save();
+    
     //7 send a succes message back to the frontend
     res.status(200).json({
         message:"Resume uploaded successfully",
-        user:updatedUser,
-        resumeUrl:resumeUrl,
+        user:user,
+        resumeUrl:cloudUrl,
     });
 
 }catch(err){
@@ -61,6 +70,29 @@ try{
 }
 );
 
+
+
+/*
+@route GET/api/user/profile
+get current user profile including resume url
+its private 
+
+*/
+
+router.get("/profile",verifyToken,async(req,res)=>{
+    try{
+        //find the usesr by thier id from the token
+        //then select(-password) means give me evrything except the password (security)
+        const user=await User.findById(res.user.id).select("-password");
+        //send tje fresh user object -with the new resumeUrl back to react
+        res.json(user);
+
+    }catch(err){
+        console.error("Profile error:",err.message);
+    
+        res.status(500).json({message:"Server error"});
+    }
+});
 
 //9 exports the router so server.js can use it
 module.exports=router;

@@ -102,10 +102,16 @@ const API_BASE_URL = import.meta.env.MODE === "production"
                     {/* Actions */}
                     <td className="p-4">
                       {app.resumeUrl ? (
-                       <a href={`${API_BASE_URL}${app.resumeUrl}`} target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-sm text-blue-400 hover:text-blue-300 underline"
-                        >
+                      <a 
+                 href={
+                     app.resumeUrl.startsWith("http") 
+                     ? app.resumeUrl 
+                      : `${API_BASE_URL}${app.resumeUrl}`
+                    }
+                       target="_blank" 
+                        rel="noopener noreferrer"
+                       className="text-sm text-blue-400 hover:text-blue-300 underline"
+  >
                           View Resume
                         </a>
                       ) : (

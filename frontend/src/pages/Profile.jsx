@@ -165,13 +165,18 @@ const API_BASE_URL = import.meta.env.MODE === "production"
         {/*status display */}
         {user.resumeUrl?(
           <div className="mb-4 p-3 bg-green-900/30 border border-green-600 rounded text-green-300">You have a resume on file <br/>
-        <a 
-        href={`${API_BASE_URL}${user.resumeUrl}`} // Use the dynamic variable
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline font-blod hover:text-green-100">
-          View Current Resume
-        </a>
+       <a 
+  href={
+    user.resumeUrl.startsWith("http") 
+      ? user.resumeUrl // It's a Cloudinary link, use it as is
+      : `${API_BASE_URL}${user.resumeUrl}` // It's a local link, add the prefix
+  }
+  target="_blank"
+  rel="noopener noreferrer"
+  className="underline font-bold hover:text-green-100"
+>
+  View Current Resume
+</a>
         </div>):(
           <div className="mb-4 p-3 bg-yellow-900/30 border border-yellow-600 rounded text-yellow-300">
             No resume uploaded yet. "Easy Apply is disabled"
