@@ -7,6 +7,8 @@ function Login(){
   const [email,setEmail]=useState("");
  const [password,setPassword]=useState("");
  const[error,setError]=useState("");
+
+ const[isSubmitting,setIsSubmitting]=useState(false);
  const navigate=useNavigate();
 
 // get the login function from our global AuthContext
@@ -17,6 +19,9 @@ const{login}=useAuth();
 const handleSubmit=async(e)=>{
   e.preventDefault();//stop the page from reloading
   setError("");//clear any old errors
+
+if(isSubmitting)return;
+setIsSubmitting(true);
 
   try{
     //call the backend api(using our secure axiosInstance)
@@ -35,6 +40,8 @@ const handleSubmit=async(e)=>{
   catch(err){
     //if the backned sends an error like user not found ,show it
     setError(err.response?.data?.message || "Login falied PLease try again")
+ 
+ setIsSubmitting(false);
   }
 };
 

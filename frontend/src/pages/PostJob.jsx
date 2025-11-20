@@ -9,6 +9,8 @@ function PostJob(){
     const[company,setCompany]=useState("");
     const[location,setLocation]=useState("");
     const[salary,setSalary]=useState("");
+
+    const[isSubmitting,setIsSubmitting]=useState(false);
     const navigate=useNavigate();
 
     const{user}=useAuth();//get logged-in-user
@@ -23,6 +25,15 @@ function PostJob(){
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
+
+
+        //prevent duplicates -if already submitting, stop here
+       if(isSubmitting)return;
+
+       //lock the buttons
+       setIsSubmitting(true);
+
+
         //1 prepare the data object
         const jobData={title,company,location,salary};
         try{
@@ -36,7 +47,12 @@ function PostJob(){
         }catch(err){
             console.error("Failed to post job",err);
             alert("Error:" + (err.response?.data?.message || "Could not post job"));
-        }
+        
+        //only unlock the button if there was an error -so they can try again
+        setIsSubmitting(false);
+          }
+
+          //we dont see set isSubmitting(false on sucess becuse we are navigating away)
     };
 
     

@@ -16,6 +16,8 @@ function RegisterRecruiter(){
     const[password,setPassword]=useState("");
     const[confirm,setConfirm]=useState("");
 
+    const[isSubmitting,setIsSubmitting]=useState(false);// state for the submitting which helo in duplicate api calls
+
   //   company state 
   const[companyName,setCompanyName]=useState("");
   const[contactEmail,setContactEmail]=useState("");
@@ -29,6 +31,10 @@ function RegisterRecruiter(){
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    if(isSubmitting)return; //safety check  
+    setIsSubmitting(true); //lock the button after the api call so that until it finshes or get fals no othe api calls cannot be made
+
 
 
     // frontend validation
@@ -67,6 +73,11 @@ function RegisterRecruiter(){
   }catch(err){
     setSuccess("");
     setError(err.response?.data?.message||"Registration failed");
+  
+
+    //ulblock the issubmitted if only on error
+    setIsSubmitting(false);
+  
   }
   };
 
