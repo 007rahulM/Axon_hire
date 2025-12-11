@@ -30,12 +30,12 @@ router.post("/generate-questions", verifyToken, async (req, res) => {
       return res.status(400).json({ message: "Job title is required." });
     }
 
-    // 10. 🎯 FIX: Use the 'gemini-1.0-pro' model.
+    // 10.  Use the 'gemini-1.0-pro' model.
     // This is the most stable and widely available free-tier model.
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
     // 11. Create the instructions for the AI
-    // 🎯 FIX: Use ${jobTitle} to inject the variable into the string.
+    //  Use ${jobTitle} to inject the variable into the string.
     const prompt = `
    I am Axon — an advanced, fast-thinking interview intelligence system designed to evaluate candidates with clarity, depth, and real-world relevance. I generate questions the same way top recruiters and hiring managers operate in high-performance environments.
 
