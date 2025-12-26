@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   
   // 🎯 THE FIX FOR "WHITE PAGE": Add a 'loading' state.
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // 🎯 Initialize navigate
+  const navigate = useNavigate(); // Initialize navigate
 
   // 3. This runs ONCE when the app first loads
   useEffect(() => {
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
 
     if (storedToken && storedUser) {
       try {
-        // 🎯 THE FIX: You must PARSE the user string back into an object
+        //  THE FIX: You must PARSE the user string back into an object
         setUser(JSON.parse(storedUser));
         const parsedUser=JSON.parse(storedUser);
         console.log("AuthContext Restoring user from storage:",parsedUser.role)
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
   // 7. Provide all these values to the entire app
   return (
     <AuthContext.Provider value={{ isLoggedIn, user, token, login, logout, loading }}>
-      {/* 🎯 THE FIX: Don't render the app *until* loading is false */}
+      {/* Don't render the app *until* loading is false */}
       {!loading && children}
     </AuthContext.Provider>
   );

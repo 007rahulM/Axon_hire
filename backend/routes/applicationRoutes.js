@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const vereifytoken = require("../middleware/authMiddleware");
+const verifytoken = require("../middleware/authMiddleware");
 const Application = require("../models/Application");
 const Job = require("../models/Job");
 const User = require("../models/User");
@@ -10,7 +10,7 @@ const User = require("../models/User");
 apply for a job using the user's saved Master Resume (easy apply)
 private - user must be logged in
 */
-router.post("/:jobId/apply", vereifytoken, async (req, res) => {
+router.post("/:jobId/apply", verifytoken, async (req, res) => {
   try {
     const jobId = req.params.jobId;
     const userId = req.user.id;
@@ -61,7 +61,7 @@ router.post("/:jobId/apply", vereifytoken, async (req, res) => {
 Get all applications for jobs posted by the logged-in recruiter
 private - only recruiter can access
 */
-router.get("/recruiter", vereifytoken, async (req, res) => {
+router.get("/recruiter", verifytoken, async (req, res) => {
   try {
     // 🎯 FIX: Use 'req.user.id' directly. 'userId' was not defined here.
     const jobs = await Job.find({ postedBy: req.user.id });

@@ -1,98 +1,74 @@
-//1 import our tools
-const express=require("express");
-const router=express.Router();
-const verifyToken=require("../middleware/authMiddleware");//our logged-in security guard
-const upload=require("../middleware/uploadMiddleware");//our new file catcher midddleware
-const User=require("../models/User");//the user blueprint
-
-
+const express = require("express");
+const router = express.Router();
+const verifyToken = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
+const User = require("../models/User");
 
 /*
-@route POST/api/users/upload-resume
--to upload or update a user's master resume
--its private user must be logged in to use
-
+@route POST /api/users/upload-resume
+To upload or update a user's master resume
 */
-
-/*/2 this is route wher 2 middleware guards are passing
--verifyToken runs first if user isn't logged in it stops
--upload.single('resume') runs second it looks for a file in the form-data
-with the key resume it saves it to the uploads/folders
--if both pass our main async(req,res)=>....)'logic will runs
-
-*/
-
-router.post("/upload-resume",[verifyToken,upload.single("resume")],
-async(req,res)=>{
-    //3 at this point vereifytoken has given use req.user
-    //and uploas has given us req.file
-try{
-    //4 check if the file uploads actually succeeded
-    if(!req.file){
-        return res.status(400).json({message:"No file uploaded"});
-
-    }
-
-    //5 get theunique path of the file multer just saved
-    //req.file.path will be somethine lie "uploads.resume-1233.pdf"
-    //we'll fix path separator for windows/links later if needed
-    //  THE FIX: Manually construct the clean URL
-        // Instead of relying on the messy system path, we just use the filename.
-        // This creates "uploads/resume-123.pdf" perfectly every time.
-       
-        //const resumeUrl = `/uploads/${req.file.filename}`;
-   const cloudUrl=req.file.path;
-   console.log(" File uploaded to Cloudinary:", cloudUrl);
-
-    //6 find the logged-in user in the database and update their resumeURL field
-    //req.user.id comes from our verifyToken middleware
-    //{new:true} tells mongoose to send us back the updated use
+router.post("/upload-resume", verifyToken, (req, res) => {
     
-    //const updatedUser=await User.findByIdAndUpdate(req.user.id,{resumeUrl:resumeUrl},{new:true}).select("-password");//.secelct("-password") removes the password hash
+    // 🎯 FIX: We wrap the upload middleware in a function to catch errors manually
+    const uploadSingle = upload.single("resume");
 
-    const user=await User.findById(req.user.id);
-    user.resumeUrl=cloudUrl;//save the secure link
-    await user.save();
-    
-    //7 send a succes message back to the frontend
-    res.status(200).json({
-        message:"Resume uploaded successfully",
-        user:user,
-        resumeUrl:cloudUrl,
+    uploadSingle(req, res, async (err) => {
+        // 1. Handle Multer/Cloudinary Errors specifically
+        if (err) {
+            console.error("Upload Middleware Error:", err);
+            return res.status(500).json({ 
+                message: "File upload failed", 
+                error: err.message // This will show you the REAL reason in the frontend console
+            });
+        }
+
+        // 2. Main logic runs only if upload succeeded
+        try {
+            if (!req.file) {
+                return res.status(400).json({ message: "No file uploaded" });
+            }
+
+            const cloudUrl = req.file.path;
+            console.log("File uploaded to Cloudinary:", cloudUrl);
+
+            // 3. Update User
+            const user = await User.findById(req.user.id);
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            
+            user.resumeUrl = cloudUrl;
+            await user.save();
+
+            res.status(200).json({
+                message: "Resume uploaded successfully",
+                user: user,
+                resumeUrl: cloudUrl,
+            });
+
+        } catch (dbErr) {
+            console.error("Database Error:", dbErr.message);
+            res.status(500).json({ message: "Server error during database save" });
+        }
     });
-
-}catch(err){
-    //8 our safety net if the database update fails
-    console.error("Resume upload error:",err.message);
-    res.status(500).json({message:"Server error during resume uploading"});
-}
-   
-}
-);
-
-
+});
 
 /*
-@route GET/api/user/profile
-get current user profile including resume url
-its private 
-
+@route GET /api/users/profile
+Get current user profile including resume url
 */
-
-router.get("/profile",verifyToken,async(req,res)=>{
-    try{
-        //find the usesr by thier id from the token
-        //then select(-password) means give me evrything except the password (security)
-        const user=await User.findById(res.user.id).select("-password");
-        //send tje fresh user object -with the new resumeUrl back to react
+router.get("/profile", verifyToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
         res.json(user);
-
-    }catch(err){
-        console.error("Profile error:",err.message);
-    
-        res.status(500).json({message:"Server error"});
+    } catch (err) {
+        console.error("Profile error:", err.message);
+        res.status(500).json({ message: "Server error" });
     }
 });
 
-//9 exports the router so server.js can use it
-module.exports=router;
+module.exports = router;

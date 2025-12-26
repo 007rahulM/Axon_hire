@@ -9,6 +9,7 @@ const router = express.Router();
 const verifyToken = require("../middleware/authMiddleware");
 // 4. Import the Google AI library
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const parseResumeFromUrl = require("../utils/resumeParser");
 
 // 5. Initialize the Google AI client (it reads the key from .env)
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
@@ -73,6 +74,45 @@ Formatting rules I will follow:
     res.status(500).json({ message: "Error generating questions from AI." });
   }
 });
+
+
+/*
+route -POST/api/ai/analyze-resume
+this extract text from resume and analyze it 
+this is a private endpoint and its private only recruiter can acces it
+
+*/
+router.post("/analyze-resume",verifyToken, async(req,res)=>{
+  try{
+    const{resumeUrl,jobDescription}=req.body;
+
+    if(!resumeUrl ){
+      return res.status(400).json({message:"Resume Url is required"});
+    }
+    // extract text from the pdf url
+    console.log("Extracting text from:",resumeUrl);
+    const resumeText=await parseResumeFromUrl(resumeUrl);
+
+    //safety check that is the resume empty or just a image
+    if(!resumeText || resumeText.length<50){
+      return res.status(400).json({
+        message:"Resume appears emty or is an image so Please upload a text-based PDF"
+
+      });
+    }
+
+    //for test we will send the raw thext back to frontend
+    res.status(200).json({
+      message:"Text extracted succesfully",
+      extractedText:resumeText
+    });
+  }
+  catch(err){
+    console.error("AI Analysis Error:", err.message);
+    res.status(500).json({message:"Failed to analyze resume"});
+  }
+});
+
 
 // 17. Export this router so server.js can use it
 module.exports = router;
